@@ -1,5 +1,5 @@
 .data
-welcome:.asciiz"********** WELCOME TO VENDOR STOP **********\n"
+welcome:.asciiz"********** MÁQUINA EXPENDEDORA **********\n"
 cost:.asciiz"PRODUCT            COST(Rs)\n\nCOKE                            30\nSPRITE                          25\nWATER BOTTLE          20\nMANGO DRINK             15\n"
 coins:.asciiz"ACCEPTED COINS AND CASH\n\nRs.5 COIN - (f)\nRs.10 COIN - (t)\nRs.20 CASH - (T)\nRs.100 CASH - (H)"
 ex:.asciiz"RETURN - R\nEXIT - X"
@@ -17,6 +17,7 @@ change:.asciiz"\nYOUR CHANGE IS "
 errorinput:.asciiz"INPUT ERROR"
 low:.asciiz"LESS COINS"
 thanks:.asciiz"THANKS FOR VISITING"
+# VALOR DE LOS PRODUCTOS
 cokeval:.word 10
 spriteval:.word 1
 waterval:.word 10
@@ -25,12 +26,14 @@ cokep:.word 30
 spritep:.word 25
 waterp:.word 20
 mangop:.word 15
+#VALOR DE DINERO QUE ACEPTA LA MAQUINA
 five:.word 5
 ten:.word 10
 twenty:.word 20
 hundred:.word 100
 nl:.asciiz"\n"
 .text
+# CARGANDO DATOS EN VARIABLES TEMPORALES Y SSEGURAS
 li $s6,0
 lw $s0,cokep
 lw $s1,spritep
@@ -40,6 +43,7 @@ lw $t8,cokep
 lw $t7,spritep
 lw $t6,waterp
 lw $t5,mangop
+# MOSTRAR LOS DATOS EN VENTANA
 li $v0,55
 li $a1,4
 la $a0,welcome
@@ -56,16 +60,18 @@ li $v0,55
 li $a1,4
 la $a0,ex
 syscall
+#######################################################################
 promptUser:    
-	li $v0,4    
+	li $v0,4  # IMPRIMIR STRING
        	la $a0,coinprompt       
        	syscall  
         la $a0,nl  
        	syscall                
-       	li $v0, 12                  
+       	li $v0, 12 #LEER CARACTER                 
        	syscall                     
        	move $s4, $v0  
 parseInput:
+        # VALIDANDO EL INGRESO DE MONEDAS
 	li $t0,'f'
 	beq $s4,$t0,userfive
 	j userfivedone
@@ -79,7 +85,7 @@ userfive:
 	la $a0,1000
 	syscall
 	li $v0,4
-	la $a0,acctotal
+	la $a0,acctotal # IMPRIMIR EL TOTAL
 	syscall
 	la $a0,unit
 	syscall
