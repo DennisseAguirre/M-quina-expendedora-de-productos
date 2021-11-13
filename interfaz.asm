@@ -1,7 +1,6 @@
 .data
 titulo: .asciiz "Máquina Expendedora de productos\n"
 codigo: .asciiz "\nIngrese el código del producto:\n"
-dinero: .asciiz "\nIngrese el dinero:\n"
 fileName: .asciiz "codigos.txt"
 fileWords: .space 1024
 .text
@@ -47,14 +46,16 @@ move $t1, $v0
 
 #imprimir mensaje de input
 li $v0, 4
-la $a0, dinero
+la $a0, codigo
 syscall
 
 #Leer entero
 li $v0, 5
 syscall
-
 move $t2, $v0
+
+## comprobando codigo
+
 
 
 

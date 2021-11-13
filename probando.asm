@@ -85,7 +85,7 @@ userfive:
 	la $a0,1000
 	syscall
 	li $v0,4
-	la $a0,acctotal # IMPRIMIR EL TOTAL
+	la $a0,acctotal # IMPRIMIR L cantidad de usuario
 	syscall
 	la $a0,unit
 	syscall
