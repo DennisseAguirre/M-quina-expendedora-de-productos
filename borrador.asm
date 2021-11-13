@@ -82,6 +82,7 @@ pedirdinero:
 ce:
 jal dineropuesto
 move $s6,$v0
+blt $s6,$t8,pedirdinero
 j condicion
 
 
@@ -144,7 +145,10 @@ lw $ra,4($sp)
 addi,$sp,$sp,8
 jr $ra
 
+
 condicion:
+blt $s6,$t8,pedirdinero
 li $v0,4
 la $a0,opcion
 syscall
+
