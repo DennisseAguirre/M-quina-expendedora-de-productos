@@ -1,7 +1,7 @@
 .data
 titulo: .asciiz "Máquina Expendedora de productos\n"
-cost:.asciiz"Producto--Codigo--Precio \nCOKE--c--30\nSPRITE--s--25\nWATER BOTTLE--w--20 \nMANGO DRINK--m--15\n"
-coins:.asciiz"\n Dinero válido\n\ 25 centavos - (f)\n 50 centavos - (t)\n 1 dolar - (T)\n 10 dolares - (H)"
+cost:.asciiz"Producto--Codigo--Precio \nCocaCola--c--30\nGatorade--g--25\nVive100--v--20 \nBotellaAgua--b--15\n"
+coins:.asciiz"\n Dinero válido\n\ 25 centavos - (f)\n 50 centavos - (t)\n 1 dolar - (u)\n 10 dolares - (d)"
 dinero: .asciiz "\n Ingresa su dinero\n"
 producto: .asciiz "\n Ingrese el código del producto que desea: \n"
 codigo: .asciiz "\n Ingresa el código:\n"
@@ -10,22 +10,23 @@ dineromaquina:.asciiz"\n  Tu dinero puesto "
 salto:.asciiz"\n"
 salida:.asciiz"Si no desea comprar otra cosa ponga x para salir"
 centavos:.asciiz"centavos "
-opcion:.asciiz"\nCOKE\t\t-\tc\nSPRITE\t\t-\ts\nWATER BOTTLE\t-\tw\nMANGO DRINK\t-\tm\n\n"
+opcion:.asciiz"\nCocaCola  c\nGatorade  g\nVive100  v\nBotellaAgua  b\n\n"
 pocodinero:.asciiz"\n Poco dinero \n"
 nodrink:.asciiz"No hay esta bebida en el stock"
 cambio:.asciiz"\n Tu cambio es :  "
 seguir:.asciiz"\n Desea seguir comprando , si su opcion es si ponga -s, caso contrario -n \n"
+
 # CANTIDAD DE PRODUCTOS
-cokeval:.word 10
-spriteval:.word 1
-waterval:.word 10
-mangoval:.word 10
+cocacolacant:.word 10
+gatoradecant:.word 1
+vive100cant:.word 10
+botellaaguacant:.word 10
 
 # VALOR DE LOS PRODUCTOS
-cokep:.word 30
-spritep:.word 25
-waterp:.word 20
-mangop:.word 15
+cocacolava:.word 30
+gatoradeva:.word 25
+vive100va:.word 20
+botellaaguava:.word 15
 
 #VALOR DE DINERO QUE ACEPTA LA MAQUINA
 veinticinco:.word 25
@@ -36,14 +37,14 @@ diez:.word 1000
 .text
 # CARGANDO DATOS EN VARIABLES TEMPORALES Y SSEGURAS
 li $s6,0
-lw $s0,cokep
-lw $s1,spritep
-lw $s2,waterp
-lw $s3,mangop
-lw $t8,cokep
-lw $t7,spritep
-lw $t6,waterp
-lw $t5,mangop
+lw $s0,cocacolava
+lw $s1,gatoradeva
+lw $s2,vive100va
+lw $s3,botellaaguava
+lw $t8,cocacolava
+lw $t7,gatoradeva
+lw $t6,vive100va
+lw $t5,botellaaguava
 
 #imprimir titulo
 li $v0, 4
@@ -63,8 +64,8 @@ syscall
 # codigo de dinero
 li $t0,'f'
 li $t1,'t'
-li $t2,'T'
-li $t3,'H'
+li $t2,'u'
+li $t3,'d'
 li $t4,'x'
 
 # pedir dinero
@@ -79,8 +80,8 @@ pedirdinero:
        	move $s4, $v0 
        	li $t0,'f'
         li $t1,'t'
-        li $t2,'T'
-        li $t3,'H' 
+        li $t2,'u'
+        li $t3,'d' 
        	beq $s4,$t0,usoveinticinco
         beq $s4,$t1,usocincuenta
         beq $s4,$t2,usouno
@@ -198,33 +199,30 @@ syscall
 move $s5, $v0 
 li $t1,'x'
 li $t2,'c'
-li $t4,'s'
-li $t5,'w'
-li $t6,'m'
+li $t4,'g'
+li $t5,'v'
+li $t6,'b'
 beq $s5,$t1,salir
-beq $s5,$t2,cake
-beq $s5,$t4,sprite
-beq $s5,$t5,waterbottle
-beq $s5,$t6,mangodrink
+beq $s5,$t2,cocacola
+beq $s5,$t4,gatorade
+beq $s5,$t5,vive100p
+beq $s5,$t6,botellaaguap
 j continue
 
-mangodrink:
-lw $t5,mangop
+botellaaguap:
+lw $t5,botellaaguava
 blt $s6,$t5,ingresarmasmonedas
-lw $t3,mangoval
-beq $t3,$zero,outofmangodrink
-j outofmangodrinkdone
+lw $t3,botellaaguacant
+beq $t3,$zero,nhbotellaagua
+j comprarbotellaagua
 
-outofmangodrink:
-li $v0,55
-la $a1,4
-la $a0,nodrink
-syscall
+nhbotellaagua:
+jal aviso
 j continuedone
 
-outofmangodrinkdone:
+comprarbotellaagua:
         sub $t3,$t3,1
-	sw $t3,mangoval
+	sw $t3,botellaaguacant
 	sub $s6,$s6,$s3
 	li $v0,4
 	la $a0,cambio
@@ -243,16 +241,16 @@ outofmangodrinkdone:
 	syscall
 	j comprar
 	
-waterbottle:
-lw $t6,waterp
+vive100p:
+lw $t6,vive100va
 blt $s6,$t6,ingresarmasmonedas
-lw $t3,waterval
-beq $t3,$zero,outofwaterbottle
-j outofwaterbottleedone
+lw $t3,vive100cant
+beq $t3,$zero,nhvive100p
+j comprarvive100p
 
-outofwaterbottleedone:
+comprarvive100p:
 	sub $t3,$t3,1
-	sw $t3,waterval
+	sw $t3,vive100cant
 	sub $s6,$s6,$s2
 	li $v0,4
 	la $a0,cambio
@@ -272,23 +270,20 @@ outofwaterbottleedone:
 	j comprar
 	
 
-outofwaterbottle:
-li $v0,55
-la $a1,4
-la $a0,nodrink
-syscall
+nhvive100p:
+jal aviso
 j continuedone
 
-sprite:
+gatorade:
 blt $s6,$t7,ingresarmasmonedas
-lw $t3,spriteval
-beq $t3,$zero,outofsprite
-j outofspritedone
+lw $t3,gatoradecant
+beq $t3,$zero,nhgatorade
+j comprargatorade
 
 
-outofspritedone:
+comprargatorade:
 	sub $t3,$t3,1
-	sw $t3,spriteval
+	sw $t3,gatoradecant
 	sub $s6,$s6,$s1
 	li $v0,4
 	la $a0,cambio
@@ -307,23 +302,20 @@ outofspritedone:
 	syscall
 	j comprar
 	
-outofsprite:
-li $v0,55
-la $a1,4
-la $a0,nodrink
-syscall
+nhgatorade:
+jal aviso
 j continue
 
 
-cake:
+cocacola:
 blt $s6,$t8,ingresarmasmonedas
-lw $t3,cokeval
-beq $t3,$zero,outofcoke
-j outofcokedone
+lw $t3,cocacolacant
+beq $t3,$zero,nhcocacola
+j comprarcocacola
 
-outofcokedone:
+comprarcocacola:
 	sub $t3,$t3,1
-	sw $t3,cokeval
+	sw $t3,cocacolacant
 	sub $s6,$s6,$s0
 	li $v0,4
 	la $a0,cambio
@@ -357,11 +349,8 @@ beq $s7,$t5,salir
 j comprar
 
 		
-outofcoke:
-	li $v0,55
-	la $a1,4
-	la $a0,nodrink
-	syscall
+nhcocacola:
+	jal aviso
 	j continuedone
 
 continuedone:
@@ -373,6 +362,23 @@ li $v0,4
 la $a0,pocodinero
 syscall
 j pedirdinero
+
+
+## funcion que avisa cuando no hay producto en el stock
+aviso:
+addi $sp, $sp, -4
+sw $ra, 0($sp)
+
+li $v0,55
+la $a1,4
+la $a0,nodrink
+syscall
+
+lw $ra,0($sp)
+addi $sp, $sp, 4 
+jr $ra
+
+
 
 
 salir:
