@@ -225,7 +225,7 @@ j continuedone
 outofmangodrinkdone:
         sub $t3,$t3,1
 	sw $t3,mangoval
-	sub $s6,$s6,$s0
+	sub $s6,$s6,$s3
 	li $v0,4
 	la $a0,cambio
 	syscall
@@ -253,6 +253,7 @@ j outofwaterbottleedone
 outofwaterbottleedone:
 	sub $t3,$t3,1
 	sw $t3,waterval
+	sub $s6,$s6,$s2
 	li $v0,4
 	la $a0,cambio
 	syscall
@@ -288,7 +289,7 @@ j outofspritedone
 outofspritedone:
 	sub $t3,$t3,1
 	sw $t3,spriteval
-	sub $s6,$s6,$s0
+	sub $s6,$s6,$s1
 	li $v0,4
 	la $a0,cambio
 	syscall
@@ -311,7 +312,7 @@ li $v0,55
 la $a1,4
 la $a0,nodrink
 syscall
-j continuedone
+j continue
 
 
 cake:
