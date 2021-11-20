@@ -1,4 +1,0 @@
-código  producto   precio  cantidad
-   c    producto1  4.34    4
-   d    producto2  1.00    5
-   e    producto3  2.50    3
